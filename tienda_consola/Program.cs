@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace tienda_consola
 {
@@ -6,11 +6,41 @@ namespace tienda_consola
     {
         static void Main(string[] args)
         {
-            Inventario inventario = new Inventario();
-            inventario.AgregarProducto("PlayStation 5", 10, 500);
-            inventario.AgregarProducto("Xbox Series X", 8, 500);
-            inventario.AgregarProducto("Nintendo Switch", 15, 300);
+            Usuario admin = new Usuario("admin", "1234");
+            bool autenticado = false;
 
+            while (!autenticado)
+            {
+                Console.WriteLine("\n--- LOGIN ---");
+                Console.Write("Usuario: ");
+                string user = Console.ReadLine();
+                Console.Write("Contraseña: ");
+                string pass = Console.ReadLine();
+
+                if (admin.iniciar_Sesion(user, pass))
+                {
+                    Console.WriteLine("¡Bienvenido, " + admin.name_usuario + "!");
+                    autenticado = true;
+                }
+                else
+                {
+                    Console.WriteLine("Usuario o contraseña incorrectos. Intente de nuevo.");
+                }
+            }
+
+            Inventario inventario_1 = new Inventario();
+            inventario_1.AgregarProducto("PlayStation 5", 10, 500);
+            inventario_1.AgregarProducto("Xbox Series X", 8, 500);
+            inventario_1.AgregarProducto("Nintendo Switch", 15, 300);
+            inventario_1.AgregarProducto("Steam Deck", 5, 450);
+            inventario_1.AgregarProducto("PlayStation 4", 20, 250);
+            inventario_1.AgregarProducto("Xbox One", 15, 200);
+            inventario_1.AgregarProducto("Nintendo Switch Lite", 10, 200);
+            inventario_1.AgregarProducto("Meta Quest 3", 8, 500);
+            inventario_1.AgregarProducto("PlayStation VR2", 6, 550);
+            inventario_1.AgregarProducto("ASUS ROG Ally", 4, 700);
+
+            Presentacion_tienda presentacion = new Presentacion_tienda();
             Carrito carrito = new Carrito();
 
             int opcion = 0;
@@ -24,25 +54,37 @@ namespace tienda_consola
                 Console.WriteLine("4. Salir");
                 Console.Write("Elige una opcion: ");
 
-                opcion = int.Parse(Console.ReadLine());
+                if (!int.TryParse(Console.ReadLine(), out opcion))
+                {
+                    Console.WriteLine("Entrada no válida. Ingresa un número.");
+                    continue;
+                }
 
                 switch (opcion)
                 {
                     case 1:
-                        inventario.MostrarProductos();
+                        presentacion.MP_Inventario(inventario_1);
                         break;
 
                     case 2:
-                        inventario.MostrarProductos();
+                        presentacion.MP_Inventario(inventario_1);
                         Console.Write("Elige el numero del producto: ");
-                        int numProducto = int.Parse(Console.ReadLine());
+                        if (!int.TryParse(Console.ReadLine(), out int numProducto))
+                        {
+                            Console.WriteLine("Entrada no válida.");
+                            break;
+                        }
 
-                        if (numProducto >= 1 && numProducto <= inventario.total)
+                        if (numProducto >= 1 && numProducto <= inventario_1.total)
                         {
                             Console.Write("¿Cuántos quieres? ");
-                            int cantidad = int.Parse(Console.ReadLine());
+                            if (!int.TryParse(Console.ReadLine(), out int cantidad))
+                            {
+                                Console.WriteLine("Entrada no válida.");
+                                break;
+                            }
 
-                            Producto elegido = inventario.productos[numProducto - 1];
+                            Producto elegido = inventario_1.productos[numProducto - 1];
 
                             if (cantidad <= elegido.cantidad)
                             {

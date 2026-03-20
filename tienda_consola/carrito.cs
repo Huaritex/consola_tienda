@@ -13,7 +13,6 @@ public class Carrito
     {
         items[total] = new Producto(producto.nombre, cantidad, producto.precio);
         total++;
-        Console.WriteLine("Se agregó " + cantidad + " " + producto.nombre + " al carrito.");
     }
 
     public void MostrarCarrito()
@@ -24,14 +23,14 @@ public class Carrito
             return;
         }
 
-        Console.WriteLine("\n--- Tu carrito ---");
+        Console.WriteLine("\nTu carrito");
         double totalPagar = 0;
         for (int i = 0; i < total; i++)
         {
             double subtotal = items[i].precio * items[i].cantidad;
-            Console.WriteLine(items[i].nombre + " x" + items[i].cantidad + " = $" + subtotal);
+            Console.WriteLine(items[i].nombre + " x" + items[i].cantidad + " = " + subtotal);
             totalPagar += subtotal;
         }
-        Console.WriteLine("Total a pagar: $" + totalPagar);
+        Console.WriteLine("Total a pagar: " + totalPagar);
     }
 }

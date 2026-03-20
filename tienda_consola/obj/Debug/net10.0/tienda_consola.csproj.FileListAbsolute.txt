@@ -12,3 +12,4 @@
 /home/huaritex/Desktop/tienda_consola/tienda_consola/obj/Debug/net10.0/tienda_consola.pdb
 /home/huaritex/Desktop/tienda_consola/tienda_consola/obj/Debug/net10.0/tienda_consola.genruntimeconfig.cache
 /home/huaritex/Desktop/tienda_consola/tienda_consola/obj/Debug/net10.0/ref/tienda_consola.dll
+/home/huaritex/Desktop/tienda_consola/tienda_consola/obj/Debug/net10.0/tienda_consola.sourcelink.json

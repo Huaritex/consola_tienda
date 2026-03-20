@@ -14,15 +14,4 @@ public class Inventario
         productos[total] = new Producto(nombre, cantidad, precio);
         total++;
     }
-
-    public void MostrarProductos()
-    {
-        Console.WriteLine("\nProductos disponibles");
-        for (int i = 0; i < total; i++)
-        {
-            Console.WriteLine((i + 1) + ". " + productos[i].nombre +
-                "Cantidad: " + productos[i].cantidad +
-                "Precio: " + productos[i].precio);
-        }
-    }
 }

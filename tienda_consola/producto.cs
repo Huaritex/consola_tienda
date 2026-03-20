@@ -1,13 +1,13 @@
 public class Producto
 {
-    public string id;
     public string nombre;
+    public int cantidad;
     public double precio;
 
-    public Producto(string id, string nombre, double precio)
+    public Producto(string nombre, int cantidad, double precio)
     {
-        this.id = id;
         this.nombre = nombre;
+        this.cantidad = cantidad;
         this.precio = precio;
     }
 }

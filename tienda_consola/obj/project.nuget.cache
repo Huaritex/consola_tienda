@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nvx0Mbe14no=",
+  "dgSpecHash": "CRgebjSIgHU=",
   "success": true,
   "projectFilePath": "/home/huaritex/Desktop/tienda_consola/tienda_consola/tienda_consola.csproj",
   "expectedPackageFiles": [
-    "/home/huaritex/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.3/microsoft.aspnetcore.app.ref.10.0.3.nupkg.sha512"
+    "/home/huaritex/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.4/microsoft.aspnetcore.app.ref.10.0.4.nupkg.sha512"
   ],
   "logs": []
 }
