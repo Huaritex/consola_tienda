@@ -1,18 +1,19 @@
+using tienda_consola;
+
 public class Carrito
 {
-    public Producto[] items;
-    public int total;
+    public TADLista<Producto> items;
+    
+    public int total => items.Cantidad;
 
     public Carrito()
     {
-        items = new Producto[50];
-        total = 0;
+        items = new TADLista<Producto>();
     }
 
     public void Agregar(Producto producto, int cantidad)
     {
-        items[total] = new Producto(producto.nombre, cantidad, producto.precio);
-        total++;
+        items.Agregar(new Producto(producto.nombre, cantidad, producto.precio));
     }
 
     public void MostrarCarrito()
@@ -27,8 +28,9 @@ public class Carrito
         double totalPagar = 0;
         for (int i = 0; i < total; i++)
         {
-            double subtotal = items[i].precio * items[i].cantidad;
-            Console.WriteLine(items[i].nombre + " x" + items[i].cantidad + " = " + subtotal);
+            Producto p = items.Obtener(i);
+            double subtotal = p.precio * p.cantidad;
+            Console.WriteLine(p.nombre + " x" + p.cantidad + " = " + subtotal);
             totalPagar += subtotal;
         }
         Console.WriteLine("Total a pagar: " + totalPagar);

@@ -6,11 +6,13 @@ namespace tienda_consola
     {
         public string name_usuario { get; set; }
         public string pwd { get; set; }
+        public Rol rol { get; set; }
 
-        public Usuario(string name_usuario, string pwd)
+        public Usuario(string name_usuario, string pwd, Rol rol)
         {
             this.name_usuario = name_usuario;
             this.pwd = pwd;
+            this.rol = rol;
         }
 
         public bool iniciar_Sesion(string input_user, string input_pwd)

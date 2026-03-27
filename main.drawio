@@ -1,0 +1,61 @@
+<mxfile host="65bd71144e">
+    <diagram id="mtbYw2OxC65zDLXAhMS3" name="Page-1">
+        <mxGraphModel dx="1211" dy="1900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Program&#xa;----------------&#xa;+ Main(args: string[]) : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="20" width="300" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Presentacion_tienda&#xa;----------------&#xa;- inventario_simple : mostrar_inventario&#xa;----------------&#xa;+ Presentacion_tienda()&#xa;+ Ejecutar() : void&#xa;+ MP_Inventario(inventario: Inventario) : void&#xa;- IniciarLogin(lista_usuarios: TADLista&lt;Usuario&gt;) : Usuario&#xa;- RegistrarProducto(inventario: Inventario) : void&#xa;- EditarProducto(inventario: Inventario) : void&#xa;- QuitarProducto(inventario: Inventario) : void&#xa;- MostrarUsuarios(usuarios: TADLista&lt;Usuario&gt;) : void&#xa;- RegistrarUsuario(usuarios: TADLista&lt;Usuario&gt;, rol_admin: Rol, rol_cliente: Rol) : void&#xa;- EditarUsuario(usuarios: TADLista&lt;Usuario&gt;, rol_admin: Rol, rol_cliente: Rol) : void&#xa;- QuitarUsuario(usuarios: TADLista&lt;Usuario&gt;, usuario_en_sesion: Usuario) : void&#xa;- BuscarUsuarioPorNombre(usuarios: TADLista&lt;Usuario&gt;, nombre_usuario: string) : Usuario&#xa;- SeleccionarRol(rol_admin: Rol, rol_cliente: Rol) : Rol&#xa;- HacerCompra(inventario: Inventario, carrito: Carrito) : void&#xa;- LeerNumero(mensaje: string) : int&#xa;- LeerDecimal(mensaje: string) : double&#xa;- LeerCadena(mensaje: string) : string" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="-80" width="470" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Usuario&#xa;----------------&#xa;+ name_usuario : string&#xa;+ pwd : string&#xa;+ rol : Rol&#xa;----------------&#xa;+ Usuario(name_usuario: string, pwd: string, rol: Rol)&#xa;+ iniciar_Sesion(input_user: string, input_pwd: string) : bool&#xa;+ cerrar_Sesion() : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="140" width="300" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Rol&#xa;----------------&#xa;- tipo : string&#xa;- permisos : TADLista&lt;string&gt;&#xa;----------------&#xa;+ Rol(tipo: string, permisos: TADLista&lt;string&gt;)&#xa;+ ObtenerTipo() : string&#xa;+ validar_Permiso(permiso: string) : bool&#xa;+ es_admin() : bool" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="360" width="300" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Inventario&#xa;----------------&#xa;+ productos : TADLista&lt;Producto&gt;&#xa;+ total : int&#xa;----------------&#xa;+ Inventario()&#xa;+ AgregarProducto(nombre: string, cantidad: int, precio: double) : void&#xa;+ ObtenerProducto(indice: int) : Producto&#xa;+ EliminarProducto(indice: int) : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="600" width="320" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Producto&#xa;----------------&#xa;+ nombre : string&#xa;+ cantidad : int&#xa;+ precio : double&#xa;----------------&#xa;+ Producto(nombre: string, cantidad: int, precio: double)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="990" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Carrito&#xa;----------------&#xa;+ items : TADLista&lt;Producto&gt;&#xa;+ total : int&#xa;----------------&#xa;+ Carrito()&#xa;+ Agregar(producto: Producto, cantidad: int) : void&#xa;+ MostrarCarrito() : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="540" width="300" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="mostrar_inventario&#xa;----------------&#xa;+ MostrarInventario(inventario: Inventario) : void&#xa;+ MostrarInventarioBasico(inventario: Inventario) : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="830" width="360" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Nodo&lt;T&gt;&#xa;----------------&#xa;+ Valor : T&#xa;+ Siguiente : Nodo&lt;T&gt;&#xa;----------------&#xa;+ Nodo(valor: T)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="830" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="TADLista&lt;T&gt;&#xa;----------------&#xa;- cabeza : Nodo&lt;T&gt;&#xa;+ Cantidad : int&#xa;----------------&#xa;+ TADLista()&#xa;+ Agregar(valor: T) : void&#xa;+ Obtener(indice: int) : T&#xa;+ Contiene(valor: T) : bool&#xa;+ EliminarEn(indice: int) : void" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="280" width="320" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="1..1" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="4" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="1..*" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="5" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="1..*" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="6" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="1..*" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="8" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="1..*" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="11" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="1..*" style="endArrow=none;html=1;align=left;verticalAlign=top;" parent="1" source="3" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="1..1" style="endArrow=none;html=1;align=left;verticalAlign=top;" edge="1" parent="1" source="2" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
