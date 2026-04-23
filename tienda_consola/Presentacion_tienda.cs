@@ -357,7 +357,18 @@ namespace tienda_consola
                 carrito.Agregar(producto_elegido, cantidad_compra);
                 producto_elegido.cantidad -= cantidad_compra;
                 Console.WriteLine("Compra realizada.");
-                carrito.MostrarCarrito();
+                Console.WriteLine("\n--- FACTURA ---");
+
+                double totalFactura = 0;
+                for (int i = 0; i < carrito.total; i++)
+                {
+                    Producto p = carrito.items.Obtener(i);
+                    double subtotal = p.precio * p.cantidad;
+                    Console.WriteLine($"{p.nombre} x{p.cantidad} = {subtotal}");
+                    totalFactura += subtotal;
+                }
+
+                Console.WriteLine("Total gastado: " + totalFactura);
             }
             else
             {

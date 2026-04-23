@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/huaritex/Desktop/tienda_consola/tienda_consola/tienda_consola.csproj",
+      "projectUniqueName": "/home/huaritex/Desktop/Proyectos_Desarrollo/tienda_consola/tienda_consola/tienda_consola.csproj",
       "projectName": "tienda_consola",
-      "projectPath": "/home/huaritex/Desktop/tienda_consola/tienda_consola/tienda_consola.csproj",
+      "projectPath": "/home/huaritex/Desktop/Proyectos_Desarrollo/tienda_consola/tienda_consola/tienda_consola.csproj",
       "packagesPath": "/home/huaritex/.nuget/packages/",
-      "outputPath": "/home/huaritex/Desktop/tienda_consola/tienda_consola/obj/",
+      "outputPath": "/home/huaritex/Desktop/Proyectos_Desarrollo/tienda_consola/tienda_consola/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/huaritex/.nuget/NuGet/NuGet.Config"
