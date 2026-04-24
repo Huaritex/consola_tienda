@@ -357,7 +357,7 @@ namespace tienda_consola
                 carrito.Agregar(producto_elegido, cantidad_compra);
                 producto_elegido.cantidad -= cantidad_compra;
                 Console.WriteLine("Compra realizada.");
-                Console.WriteLine("\n--- FACTURA ---");
+                Console.WriteLine("\n FACTURA ");
 
                 double totalFactura = 0;
                 for (int i = 0; i < carrito.total; i++)
