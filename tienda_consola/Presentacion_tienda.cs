@@ -23,24 +23,27 @@ namespace tienda_consola
 
             Rol rol_admin = new Rol("admin", permisos_admin);
             Rol rol_cliente = new Rol("cliente", permisos_cliente);
+            Rol rol_vip = new Rol("cliente_vip", permisos_cliente);
+
+            DescuentoVolumen desc_vol = new DescuentoVolumen("Descuento por Volumen", 500, 5);
+            rol_cliente.AgregarDescuento(desc_vol);
+            
+            rol_vip.AgregarDescuento(new DescuentoFijo("Descuento VIP", 10));
+            rol_vip.AgregarDescuento(desc_vol);
 
             Usuario usuario_admin = new Usuario("admin", "1234", rol_admin);
+            Usuario usuario_vip = new Usuario("vip", "1234", rol_vip);
 
             TADLista<Usuario> lista_usuarios = new TADLista<Usuario>();
             lista_usuarios.Agregar(usuario_admin);
             lista_usuarios.Agregar(new Usuario("cliente", "1234", rol_cliente));
+            lista_usuarios.Agregar(usuario_vip);
 
             Inventario inventario_principal = new Inventario();
             inventario_principal.AgregarProducto("PlayStation 5", 10, 500);
             inventario_principal.AgregarProducto("Xbox Series X", 8, 500);
             inventario_principal.AgregarProducto("Nintendo Switch", 15, 300);
             inventario_principal.AgregarProducto("Steam Deck", 5, 450);
-            inventario_principal.AgregarProducto("PlayStation 4", 20, 250);
-            inventario_principal.AgregarProducto("Xbox One", 15, 200);
-            inventario_principal.AgregarProducto("Nintendo Switch Lite", 10, 200);
-            inventario_principal.AgregarProducto("Meta Quest 3", 8, 500);
-            inventario_principal.AgregarProducto("PlayStation VR2", 6, 550);
-            inventario_principal.AgregarProducto("ASUS ROG Ally", 4, 700);
 
             Carrito carrito_compra = new Carrito();
             bool tienda_cerrada = false;
@@ -63,56 +66,25 @@ namespace tienda_consola
                         Console.WriteLine("6. Agregar usuario");
                         Console.WriteLine("7. Actualizar usuario");
                         Console.WriteLine("8. Eliminar usuario");
-                        Console.WriteLine("9. Cerrar sesion");
-                        Console.WriteLine("10. Cerrar tienda");
+                        Console.WriteLine("9. Gestionar Descuentos");
+                        Console.WriteLine("10. Cerrar sesion");
+                        Console.WriteLine("11. Cerrar tienda");
                         int opcion_admin = LeerNumero("Elige una opcion: ");
 
                         switch (opcion_admin)
                         {
-                            case 1:
-                                MP_Inventario(inventario_principal);
-                                break;
-
-                            case 2:
-                                RegistrarProducto(inventario_principal);
-                                break;
-
-                            case 3:
-                                EditarProducto(inventario_principal);
-                                break;
-
-                            case 4:
-                                QuitarProducto(inventario_principal);
-                                break;
-
-                            case 5:
-                                MostrarUsuarios(lista_usuarios);
-                                break;
-
-                            case 6:
-                                RegistrarUsuario(lista_usuarios, rol_admin, rol_cliente);
-                                break;
-
-                            case 7:
-                                EditarUsuario(lista_usuarios, rol_admin, rol_cliente);
-                                break;
-
-                            case 8:
-                                QuitarUsuario(lista_usuarios, usuario_en_sesion);
-                                break;
-
-                            case 9:
-                                usuario_en_sesion.cerrar_Sesion();
-                                sesion_cerrada = true;
-                                break;
-
-                            case 10:
-                                tienda_cerrada = true;
-                                break;
-
-                            default:
-                                Console.WriteLine("Opción no válida.");
-                                break;
+                            case 1: MP_Inventario(inventario_principal); break;
+                            case 2: RegistrarProducto(inventario_principal); break;
+                            case 3: EditarProducto(inventario_principal); break;
+                            case 4: QuitarProducto(inventario_principal); break;
+                            case 5: MostrarUsuarios(lista_usuarios); break;
+                            case 6: RegistrarUsuario(lista_usuarios, rol_admin, rol_cliente, rol_vip); break;
+                            case 7: EditarUsuario(lista_usuarios, rol_admin, rol_cliente, rol_vip); break;
+                            case 8: QuitarUsuario(lista_usuarios, usuario_en_sesion); break;
+                            case 9: MenuGestionDescuentos(rol_cliente, rol_vip); break;
+                            case 10: usuario_en_sesion.cerrar_Sesion(); sesion_cerrada = true; break;
+                            case 11: tienda_cerrada = true; break;
+                            default: Console.WriteLine("Opción no válida."); break;
                         }
                     }
                 }
@@ -129,26 +101,11 @@ namespace tienda_consola
 
                         switch (opcion_cliente)
                         {
-                            case 1:
-                                MP_Inventario(inventario_principal);
-                                break;
-
-                            case 2:
-                                HacerCompra(inventario_principal, carrito_compra);
-                                break;
-
-                            case 3:
-                                usuario_en_sesion.cerrar_Sesion();
-                                sesion_cerrada = true;
-                                break;
-
-                            case 4:
-                                tienda_cerrada = true;
-                                break;
-
-                            default:
-                                Console.WriteLine("Opción no válida.");
-                                break;
+                            case 1: MP_Inventario(inventario_principal); break;
+                            case 2: HacerCompra(inventario_principal, carrito_compra, usuario_en_sesion); break;
+                            case 3: usuario_en_sesion.cerrar_Sesion(); sesion_cerrada = true; break;
+                            case 4: tienda_cerrada = true; break;
+                            default: Console.WriteLine("Opción no válida."); break;
                         }
                     }
                 }
@@ -178,65 +135,39 @@ namespace tienda_consola
                 for (int i = 0; i < lista_usuarios.Cantidad; i++)
                 {
                     Usuario usuario = lista_usuarios.Obtener(i);
-                    if (usuario.iniciar_Sesion(usuario_ingresado, clave_ingresada))
-                    {
-                        return usuario;
-                    }
+                    if (usuario.iniciar_Sesion(usuario_ingresado, clave_ingresada)) return usuario;
                 }
-
-                Console.WriteLine("Usuario o contraseña incorrectos. Intente de nuevo.");
+                Console.WriteLine("Usuario o contraseña incorrectos.");
             }
         }
 
         private void RegistrarProducto(Inventario inventario)
         {
-            string nombre_producto = LeerCadena("Nombre del producto: ");
-            int cantidad_producto = LeerNumero("Cantidad: ");
-            double precio_producto = LeerDecimal("Precio: ");
-            inventario.AgregarProducto(nombre_producto, cantidad_producto, precio_producto);
+            string nombre = LeerCadena("Nombre del producto: ");
+            int cant = LeerNumero("Cantidad: ");
+            double precio = LeerDecimal("Precio: ");
+            inventario.AgregarProducto(nombre, cant, precio);
             Console.WriteLine("Producto agregado.");
         }
 
         private void EditarProducto(Inventario inventario)
         {
-            if (inventario.total == 0)
-            {
-                Console.WriteLine("No hay productos.");
-                return;
-            }
-
             inventario_simple.MostrarInventarioBasico(inventario);
-            int indice_producto = LeerNumero("Numero del producto a actualizar: ") - 1;
-            if (indice_producto < 0 || indice_producto >= inventario.total)
-            {
-                Console.WriteLine("Producto no válido.");
-                return;
-            }
-
-            Producto producto_actual = inventario.ObtenerProducto(indice_producto);
-            producto_actual.nombre = LeerCadena("Nuevo nombre: ");
-            producto_actual.cantidad = LeerNumero("Nueva cantidad: ");
-            producto_actual.precio = LeerDecimal("Nuevo precio: ");
+            int idx = LeerNumero("Numero del producto a actualizar: ") - 1;
+            if (idx < 0 || idx >= inventario.total) return;
+            Producto p = inventario.ObtenerProducto(idx);
+            p.nombre = LeerCadena("Nuevo nombre: ");
+            p.cantidad = LeerNumero("Nueva cantidad: ");
+            p.precio = LeerDecimal("Nuevo precio: ");
             Console.WriteLine("Producto actualizado.");
         }
 
         private void QuitarProducto(Inventario inventario)
         {
-            if (inventario.total == 0)
-            {
-                Console.WriteLine("No hay productos.");
-                return;
-            }
-
             inventario_simple.MostrarInventarioBasico(inventario);
-            int indice_producto = LeerNumero("Numero del producto a eliminar: ") - 1;
-            if (indice_producto < 0 || indice_producto >= inventario.total)
-            {
-                Console.WriteLine("Producto no válido.");
-                return;
-            }
-
-            inventario.EliminarProducto(indice_producto);
+            int idx = LeerNumero("Numero del producto a eliminar: ") - 1;
+            if (idx < 0 || idx >= inventario.total) return;
+            inventario.EliminarProducto(idx);
             Console.WriteLine("Producto eliminado.");
         }
 
@@ -245,163 +176,125 @@ namespace tienda_consola
             Console.WriteLine("\nUsuarios:");
             for (int i = 0; i < usuarios.Cantidad; i++)
             {
-                Usuario usuario = usuarios.Obtener(i);
-                Console.WriteLine((i + 1) + ". " + usuario.name_usuario + " | Rol: " + usuario.rol.ObtenerTipo());
+                Usuario u = usuarios.Obtener(i);
+                Console.WriteLine($"{i + 1}. {u.name_usuario} | Rol: {u.rol.ObtenerTipo()}");
             }
         }
 
-        private void RegistrarUsuario(TADLista<Usuario> usuarios, Rol rol_admin, Rol rol_cliente)
+        private void RegistrarUsuario(TADLista<Usuario> usuarios, Rol r_admin, Rol r_cliente, Rol r_vip)
         {
-            string nombre_usuario = LeerCadena("Nombre de usuario: ");
-            if (BuscarUsuarioPorNombre(usuarios, nombre_usuario) != null)
-            {
-                Console.WriteLine("El usuario ya existe.");
-                return;
-            }
-
-            string clave_usuario = LeerCadena("Contraseña: ");
-            Rol rol_usuario = SeleccionarRol(rol_admin, rol_cliente);
-            usuarios.Agregar(new Usuario(nombre_usuario, clave_usuario, rol_usuario));
+            string nom = LeerCadena("Nombre de usuario: ");
+            string pwd = LeerCadena("Contraseña: ");
+            Rol r = SeleccionarRol(r_admin, r_cliente, r_vip);
+            usuarios.Agregar(new Usuario(nom, pwd, r));
             Console.WriteLine("Usuario agregado.");
         }
 
-        private void EditarUsuario(TADLista<Usuario> usuarios, Rol rol_admin, Rol rol_cliente)
+        private void EditarUsuario(TADLista<Usuario> usuarios, Rol r_admin, Rol r_cliente, Rol r_vip)
         {
-            string nombre_usuario = LeerCadena("Usuario a actualizar: ");
-            Usuario usuario_encontrado = BuscarUsuarioPorNombre(usuarios, nombre_usuario);
-            if (usuario_encontrado == null)
-            {
-                Console.WriteLine("Usuario no encontrado.");
-                return;
-            }
-
-            usuario_encontrado.pwd = LeerCadena("Nueva contraseña: ");
-            usuario_encontrado.rol = SeleccionarRol(rol_admin, rol_cliente);
+            string nom = LeerCadena("Usuario a actualizar: ");
+            Usuario u = BuscarUsuario(usuarios, nom);
+            if (u == null) return;
+            u.pwd = LeerCadena("Nueva contraseña: ");
+            u.rol = SeleccionarRol(r_admin, r_cliente, r_vip);
             Console.WriteLine("Usuario actualizado.");
         }
 
-        private void QuitarUsuario(TADLista<Usuario> usuarios, Usuario usuario_en_sesion)
+        private void QuitarUsuario(TADLista<Usuario> usuarios, Usuario sesion)
         {
-            string nombre_usuario = LeerCadena("Usuario a eliminar: ");
-            Usuario usuario_encontrado = BuscarUsuarioPorNombre(usuarios, nombre_usuario);
-            if (usuario_encontrado == null)
-            {
-                Console.WriteLine("Usuario no encontrado.");
-                return;
-            }
-
-            if (usuario_encontrado == usuario_en_sesion)
-            {
-                Console.WriteLine("No puedes eliminar el usuario en sesión.");
-                return;
-            }
-
-            int indice_usuario = -1;
+            string nom = LeerCadena("Usuario a eliminar: ");
+            Usuario u = BuscarUsuario(usuarios, nom);
+            if (u == null || u == sesion) return;
             for (int i = 0; i < usuarios.Cantidad; i++)
-            {
-                if (usuarios.Obtener(i) == usuario_encontrado)
-                {
-                    indice_usuario = i;
-                    break;
-                }
-            }
-
-            if (indice_usuario >= 0)
-            {
-                usuarios.EliminarEn(indice_usuario);
-                Console.WriteLine("Usuario eliminado.");
-            }
+                if (usuarios.Obtener(i) == u) { usuarios.EliminarEn(i); break; }
+            Console.WriteLine("Usuario eliminado.");
         }
 
-        private Usuario BuscarUsuarioPorNombre(TADLista<Usuario> usuarios, string nombre_usuario)
+        private Usuario BuscarUsuario(TADLista<Usuario> lista, string nom)
         {
-            for (int i = 0; i < usuarios.Cantidad; i++)
-            {
-                Usuario usuario = usuarios.Obtener(i);
-                if (usuario.name_usuario == nombre_usuario)
-                {
-                    return usuario;
-                }
-            }
+            for (int i = 0; i < lista.Cantidad; i++)
+                if (lista.Obtener(i).name_usuario == nom) return lista.Obtener(i);
             return null;
         }
 
-        private Rol SeleccionarRol(Rol rol_admin, Rol rol_cliente)
+        private Rol SeleccionarRol(Rol r_admin, Rol r_cliente, Rol r_vip)
         {
-            Console.WriteLine("Rol (1. admin, 2. cliente): ");
-            int opcion_rol = LeerNumero("Elige rol: ");
-            return opcion_rol == 1 ? rol_admin : rol_cliente;
+            Console.WriteLine("Rol (1. admin, 2. cliente, 3. vip): ");
+            int op = LeerNumero("Elige: ");
+            if (op == 1) return r_admin;
+            if (op == 3) return r_vip;
+            return r_cliente;
         }
 
-        private void HacerCompra(Inventario inventario, Carrito carrito)
+        private void MenuGestionDescuentos(Rol cliente, Rol vip)
         {
-            if (inventario.total == 0)
-            {
-                Console.WriteLine("No hay productos disponibles.");
-                return;
-            }
+            Console.WriteLine("\n GESTION DE DESCUENTOS ");
+            Console.WriteLine("1. Modificar Porcentaje VIP");
+            Console.WriteLine("2. Modificar Descuento Volumen (Monto y %)");
+            Console.WriteLine("3. Volver");
+            int opt = LeerNumero("Opcion: ");
 
+            if (opt == 1)
+            {
+                for (int i = 0; i < vip.descuentos.Cantidad; i++)
+                    if (vip.descuentos.Obtener(i) is DescuentoFijo df)
+                        df.Porcentaje = LeerDecimal($"Nuevo % VIP (actual {df.Porcentaje}%): ");
+            }
+            else if (opt == 2)
+            {
+                double m = LeerDecimal("Nuevo monto minimo: ");
+                double p = LeerDecimal("Nuevo %: ");
+                ActualizarDescuentoVolumen(cliente, m, p);
+                ActualizarDescuentoVolumen(vip, m, p);
+            }
+        }
+
+        private void ActualizarDescuentoVolumen(Rol rol, double monto, double porc)
+        {
+            for (int i = 0; i < rol.descuentos.Cantidad; i++)
+                if (rol.descuentos.Obtener(i) is DescuentoVolumen dv)
+                { dv.MontoMinimo = monto; dv.Porcentaje = porc; }
+        }
+
+        private void HacerCompra(Inventario inventario, Carrito carrito, Usuario usuario)
+        {
             inventario_simple.MostrarInventarioBasico(inventario);
-            int indice_producto = LeerNumero("Elige el numero del producto: ") - 1;
-            if (indice_producto < 0 || indice_producto >= inventario.total)
+            int idx = LeerNumero("Producto #: ") - 1;
+            if (idx < 0 || idx >= inventario.total) return;
+
+            int cant = LeerNumero("Cantidad: ");
+            Producto p = inventario.ObtenerProducto(idx);
+
+            if (cant <= p.cantidad)
             {
-                Console.WriteLine("Producto no válido.");
-                return;
-            }
+                double subtotal = p.precio * cant;
+                double totalDescuento = usuario.rol.CalcularTotalDescuentos(subtotal);
+                double totalFinal = subtotal - totalDescuento;
 
-            int cantidad_compra = LeerNumero("Cantidad: ");
-            Producto producto_elegido = inventario.ObtenerProducto(indice_producto);
-
-            if (cantidad_compra <= producto_elegido.cantidad)
-            {
-                carrito.Agregar(producto_elegido, cantidad_compra);
-                producto_elegido.cantidad -= cantidad_compra;
-                Console.WriteLine("Compra realizada.");
-                Console.WriteLine("\n FACTURA ");
-
-                double totalFactura = 0;
-                for (int i = 0; i < carrito.total; i++)
+                Console.WriteLine($"\n RESUMEN ");
+                Console.WriteLine($"Subtotal: {subtotal:F2} bs");
+                for (int i = 0; i < usuario.rol.descuentos.Cantidad; i++)
                 {
-                    Producto p = carrito.items.Obtener(i);
-                    double subtotal = p.precio * p.cantidad;
-                    Console.WriteLine($"{p.nombre} x{p.cantidad} = {subtotal}");
-                    totalFactura += subtotal;
+                    var d = usuario.rol.descuentos.Obtener(i);
+                    double desc = d.Calcular(subtotal);
+                    if (desc > 0) Console.WriteLine($"{d.Nombre}: -{desc:F2} bs");
                 }
+                Console.WriteLine($"TOTAL A PAGAR: {totalFinal:F2} bs");
 
-                Console.WriteLine("Total gastado: " + totalFactura);
+                if (LeerCadena("¿Confirmar compra? (s/n): ").ToLower() == "s")
+                {
+                    p.cantidad -= cant;
+                    carrito.Agregar(p, cant);
+                    Console.WriteLine("\nFACTURA ");
+                    Console.WriteLine($"Producto: {p.nombre} x{cant}");
+                    Console.WriteLine($"Total Pagado: {totalFinal:F2} bs");
+                }
             }
-            else
-            {
-                Console.WriteLine("No hay suficiente stock.");
-            }
+            else Console.WriteLine("Stock insuficiente.");
         }
 
-        private int LeerNumero(string mensaje)
-        {
-            int valor_ingresado;
-            Console.Write(mensaje);
-            while (!int.TryParse(Console.ReadLine(), out valor_ingresado))
-            {
-                Console.Write("Entrada no válida. " + mensaje);
-            }
-            return valor_ingresado;
-        }
-
-        private double LeerDecimal(string mensaje)
-        {
-            double valor_ingresado;
-            Console.Write(mensaje);
-            while (!double.TryParse(Console.ReadLine(), out valor_ingresado))
-            {
-                Console.Write("Entrada no válida. " + mensaje);
-            }
-            return valor_ingresado;
-        }
-
-        private string LeerCadena(string mensaje)
-        {
-            Console.Write(mensaje);
-            return Console.ReadLine();
-        }
+        private int LeerNumero(string m) { Console.Write(m); int.TryParse(Console.ReadLine(), out int v); return v; }
+        private double LeerDecimal(string m) { Console.Write(m); double.TryParse(Console.ReadLine(), out double v); return v; }
+        private string LeerCadena(string m) { Console.Write(m); return Console.ReadLine() ?? ""; }
     }
 }
